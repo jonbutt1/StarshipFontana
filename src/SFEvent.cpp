@@ -10,7 +10,7 @@ SFEvent::SFEvent(const SDL_Event & event) {
     break;
   case SDL_USEREVENT:
     code = SFEVENT_UPDATE;
-    break;
+    break; 
   case SDL_KEYDOWN:
     switch (event.key.keysym.sym) {
     case SDLK_LEFT:
@@ -18,6 +18,12 @@ SFEvent::SFEvent(const SDL_Event & event) {
       break;
     case SDLK_RIGHT:
       code = SFEVENT_PLAYER_RIGHT;
+      break;
+    case SDLK_UP:
+      code = SFEVENT_PLAYER_UP;
+      break;
+    case SDLK_DOWN:
+      code = SFEVENT_PLAYER_DOWN;
       break;
     case SDLK_SPACE:
       code = SFEVENT_FIRE;

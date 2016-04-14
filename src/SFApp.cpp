@@ -41,6 +41,12 @@ void SFApp::OnEvent(SFEvent& event) {
     OnUpdateWorld();
     OnRender();
     break;
+  case SFEVENT_PLAYER_UP:
+    player->GoNorth();
+    break;
+  case SFEVENT_PLAYER_DOWN:
+    player->GoSouth();
+    break;
   case SFEVENT_PLAYER_LEFT:
     player->GoWest();
     break;
