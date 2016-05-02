@@ -22,6 +22,9 @@ SFAsset::SFAsset(SFASSETTYPE type, std::shared_ptr<SFWindow> window): type(type)
   case SFASSET_COIN:
     sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/coin.png");
     break;
+	case SFASSET_WALL:
+		sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/wall.png");
+		break;
   }
 
   if(!sprite) {
@@ -102,6 +105,8 @@ void SFAsset::GoWest() {
 	travelingSouth = false;
 	travelingEast = false;
 	travelingWest = true;
+
+
   Vector2 c = *(bbox->centre) + Vector2(-5.0f, 0.0f);
   if(!(c.getX() < 0)) {
     bbox->centre.reset();
@@ -114,6 +119,8 @@ void SFAsset::GoEast() {
 	travelingSouth = false;
 	travelingEast = true;
 	travelingWest = false;
+
+
   int w, h;
   SDL_GetRendererOutputSize(sf_window->getRenderer(), &w, &h);
 
@@ -125,13 +132,22 @@ void SFAsset::GoEast() {
 }
 
 void SFAsset::GoNorth() {
+	int w;
+	int h;
 	travelingNorth = true;
 	travelingSouth = false;
 	travelingEast = false;
 	travelingWest = false;
+
+	SDL_GetRendererOutputSize(sf_window->getRenderer(), &w, &h);
   Vector2 c = *(bbox->centre) + Vector2(0.0f, 5.0f);
-  bbox->centre.reset();
-  bbox->centre = make_shared<Vector2>(c);
+	if(!(c.getY() > h)) {
+ 		bbox->centre.reset();
+  	bbox->centre = make_shared<Vector2>(c);
+		}
+	else if (SFASSET_PROJECTILE == type){
+		SetNotAlive();
+	}
 }
 
 void SFAsset::GoSouth() {
@@ -139,12 +155,16 @@ void SFAsset::GoSouth() {
 	travelingSouth = true;
 	travelingEast = false;
 	travelingWest = false;
+
+
   Vector2 c = *(bbox->centre) + Vector2(0.0f, -5.0f);
+	if(!(c.getY() <0)){
   bbox->centre.reset();
   bbox->centre = make_shared<Vector2>(c);
+		}
 }
 
-//stopping moving - when hitting wall
+//tracking which way asset is moving
 std::__cxx11::string SFAsset::whichWay(){
 	if(travelingNorth == true){
 		return "north";

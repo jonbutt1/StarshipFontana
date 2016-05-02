@@ -9,7 +9,7 @@ SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), is_running(true), sf_w
   auto player_pos = Point2(canvas_w/2, 22);
   player->SetPosition(player_pos);
 
-  const int number_of_aliens = 2;
+  const int number_of_aliens = 10;
   for(int i=0; i<number_of_aliens; i++) {
     // place an alien at width/number_of_aliens * i
     auto alien = make_shared<SFAsset>(SFASSET_ALIEN, sf_window);
@@ -17,6 +17,15 @@ SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), is_running(true), sf_w
     alien->SetPosition(pos);
     aliens.push_back(alien);
   }
+
+	//dealing with drawing wall
+	const int numberOfWalls = 5;
+	for (int i=0; i < numberOfWalls; i++){
+		auto wall = make_shared<SFAsset>(SFASSET_WALL, sf_window);
+		auto pos = Point2((canvas_w/numberOfWalls)*i, (canvas_h/numberOfWalls)*i);
+		wall->SetPosition(pos);
+		walls.push_back(wall);
+	}
 
   auto coin = make_shared<SFAsset>(SFASSET_COIN, sf_window);
   auto pos  = Point2((canvas_w/4), 100);
@@ -96,8 +105,8 @@ void SFApp::OnUpdateWorld() {
     }
   }
 	//detecting colision between wall and player
-	for (auto a : aliens) {
-			if (a->CollidesWith(player)){
+	for (auto w : walls) {
+			if (w->CollidesWith(player)){
 				//player->HandleCollision();
 				std:string whichWay = player->whichWay();
 				if (whichWay == "north"){
@@ -143,6 +152,10 @@ void SFApp::OnRender() {
   for(auto c: coins) {
     c->OnRender();
   }
+
+	for(auto w: walls){
+		w->OnRender();
+	}
 
   // Switch the off-screen buffer to be on-screen
   SDL_RenderPresent(sf_window->getRenderer());
