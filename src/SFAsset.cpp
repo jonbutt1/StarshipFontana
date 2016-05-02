@@ -1,6 +1,10 @@
 #include "SFAsset.h"
 
 int SFAsset::SFASSETID=0;
+static bool travelingNorth;
+static bool travelingSouth;
+static bool travelingEast;
+static bool travelingWest;
 
 SFAsset::SFAsset(SFASSETTYPE type, std::shared_ptr<SFWindow> window): type(type), sf_window(window) {
   this->id   = ++SFASSETID;
@@ -94,6 +98,10 @@ void SFAsset::OnRender() {
 }
 
 void SFAsset::GoWest() {
+	travelingNorth = false;
+	travelingSouth = false;
+	travelingEast = false;
+	travelingWest = true;
   Vector2 c = *(bbox->centre) + Vector2(-5.0f, 0.0f);
   if(!(c.getX() < 0)) {
     bbox->centre.reset();
@@ -102,6 +110,10 @@ void SFAsset::GoWest() {
 }
 
 void SFAsset::GoEast() {
+	travelingNorth = false;
+	travelingSouth = false;
+	travelingEast = true;
+	travelingWest = false;
   int w, h;
   SDL_GetRendererOutputSize(sf_window->getRenderer(), &w, &h);
 
@@ -113,15 +125,40 @@ void SFAsset::GoEast() {
 }
 
 void SFAsset::GoNorth() {
-  Vector2 c = *(bbox->centre) + Vector2(0.0f, 1.0f);
+	travelingNorth = true;
+	travelingSouth = false;
+	travelingEast = false;
+	travelingWest = false;
+  Vector2 c = *(bbox->centre) + Vector2(0.0f, 5.0f);
   bbox->centre.reset();
   bbox->centre = make_shared<Vector2>(c);
 }
 
 void SFAsset::GoSouth() {
-  Vector2 c = *(bbox->centre) + Vector2(0.0f, -1.0f);
+	travelingNorth = false;
+	travelingSouth = true;
+	travelingEast = false;
+	travelingWest = false;
+  Vector2 c = *(bbox->centre) + Vector2(0.0f, -5.0f);
   bbox->centre.reset();
   bbox->centre = make_shared<Vector2>(c);
+}
+
+//stopping moving - when hitting wall
+std::__cxx11::string SFAsset::whichWay(){
+	if(travelingNorth == true){
+		return "north";
+	}
+	if(travelingSouth == true){
+		return "south";
+	}
+	if(travelingEast == true){
+		return "east";
+	}
+	if(travelingWest == true){
+		return "west";
+	}
+	
 }
 
 bool SFAsset::CollidesWith(shared_ptr<SFAsset> other) {
@@ -144,4 +181,7 @@ void SFAsset::HandleCollision() {
   if(SFASSET_PROJECTILE == type || SFASSET_ALIEN == type) {
     SetNotAlive();
   }
+//	if(SFASSET_PLAYER == type){
+//		stopMoving();
+//	}
 }

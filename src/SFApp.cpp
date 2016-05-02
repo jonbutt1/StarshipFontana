@@ -9,7 +9,7 @@ SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), is_running(true), sf_w
   auto player_pos = Point2(canvas_w/2, 22);
   player->SetPosition(player_pos);
 
-  const int number_of_aliens = 10;
+  const int number_of_aliens = 2;
   for(int i=0; i<number_of_aliens; i++) {
     // place an alien at width/number_of_aliens * i
     auto alien = make_shared<SFAsset>(SFASSET_ALIEN, sf_window);
@@ -95,6 +95,25 @@ void SFApp::OnUpdateWorld() {
       }
     }
   }
+	//detecting colision between wall and player
+	for (auto a : aliens) {
+			if (a->CollidesWith(player)){
+				//player->HandleCollision();
+				std:string whichWay = player->whichWay();
+				if (whichWay == "north"){
+					player->GoSouth();
+				}
+				else if (whichWay == "south"){
+					player->GoNorth();
+				}
+				else if (whichWay == "east"){
+					player->GoWest();
+				}
+				else if (whichWay == "west"){
+					player->GoEast();	
+				}
+			}
+		}
 
   // remove dead aliens (the long way)
   list<shared_ptr<SFAsset>> tmp;

@@ -40,6 +40,8 @@ public:
   virtual void      SetNotAlive();
   virtual bool      IsAlive();
   virtual void      HandleCollision();
+	//added for stop moving
+	virtual string			whichWay();
 
   virtual bool                      CollidesWith(shared_ptr<SFAsset>);
   virtual shared_ptr<SFBoundingBox> GetBoundingBox();
