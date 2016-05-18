@@ -12,6 +12,11 @@ Only one woman is brave enough to go after b’Kuhn. Will she be
 Earth’s hero? Puzzle your way though the universe in the company
 of Commander Fontana in **Starship Fontana**.
 
+## Pulled From ##
+Initial commit pulled from [Aiden Delaney] (https://github.com/AidanDelaney/StarshipFontana.git)
+
+In case of this finding its way into the deep dark depths of the WWW, my latest commit can be found here [Jon Butt] (https://github.com/jonbutt1/StarshipFontana.git) 
+
 ## Installation ##
 You will have to have the SDL development libraries installed on
 your system.  The easiest way to compile is to use a command-line
@@ -33,3 +38,6 @@ from the top-level directory.  The game will expect to find the
 The sprites in this game come directly from 
 [SpriteLib](http://www.widgetworx.com/widgetworx/portfolio/spritelib.html) and are used
 under the terms of the [CPL 1.0](http://opensource.org/licenses/cpl1.0.php).
+
+The Wall sprite in this game comes from
+[openGameArt] (http://opengameart.org/content/pixel-art-brick-tiles) and are used under teh terms of the [CC0 1.0] (http://creativecommons.org/publicdomain/zero/1.0/
