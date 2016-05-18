@@ -116,6 +116,12 @@ void SFApp::OnUpdateWorld() {
 
    // alien / player collision
   for(auto a : aliens) {
+		for(auto w: walls){
+			//dealing with walls and aliens being sporned in the same screenspace
+			if(a->CollidesWith(w)){
+				a->SetNotAlive();
+			}
+		}
     if(player->CollidesWith(a)){
 		player->SetNotAlive();
 		std::cout<<"GAME OVER - You Lose!! Score: "<<score<<std::endl;	
@@ -137,7 +143,6 @@ void SFApp::OnUpdateWorld() {
 	//detecting colision between wall and player
 	for (auto w : walls) {
 			if (w->CollidesWith(player)){
-				//player->HandleCollision();
 				std:string whichWay = player->whichWay();
 				if (whichWay == "north"){
 					player->GoSouth();
