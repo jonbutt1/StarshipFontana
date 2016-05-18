@@ -22,9 +22,9 @@ SFAsset::SFAsset(SFASSETTYPE type, std::shared_ptr<SFWindow> window): type(type)
   case SFASSET_COIN:
     sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/coin.png");
     break;
-	case SFASSET_WALL:
-		sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/wall.png");
-		break;
+  case SFASSET_WALL:
+	sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/wall.png");
+	break;
   }
 
   if(!sprite) {
@@ -145,6 +145,7 @@ void SFAsset::GoNorth() {
  		bbox->centre.reset();
   	bbox->centre = make_shared<Vector2>(c);
 		}
+	//destroys rocket when hits top of screen
 	else if (SFASSET_PROJECTILE == type){
 		SetNotAlive();
 	}
@@ -165,7 +166,7 @@ void SFAsset::GoSouth() {
 }
 
 //tracking which way asset is moving
-std::__cxx11::string SFAsset::whichWay(){
+std::string SFAsset::whichWay(){
 	if(travelingNorth == true){
 		return "north";
 	}
@@ -198,10 +199,7 @@ bool SFAsset::IsAlive() {
 }
 
 void SFAsset::HandleCollision() {
-  if(SFASSET_PROJECTILE == type || SFASSET_ALIEN == type) {
+  if(SFASSET_PROJECTILE == type || SFASSET_ALIEN == type || SFASSET_PLAYER == type || SFASSET_COIN ==type) {
     SetNotAlive();
   }
-//	if(SFASSET_PLAYER == type){
-//		stopMoving();
-//	}
 }

@@ -1,5 +1,8 @@
 #include "SFApp.h"
 
+//to track score
+int score = 0;
+
 SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), is_running(true), sf_window(window) {
   int canvas_w, canvas_h;
   SDL_GetRendererOutputSize(sf_window->getRenderer(), &canvas_w, &canvas_h);
@@ -84,15 +87,40 @@ void SFApp::OnUpdateWorld() {
   // Update projectile positions
   for(auto p: projectiles) {
     p->GoNorth();
+	for (auto w: walls){
+		if(p->CollidesWith(w)){
+			p->SetNotAlive();
+		}
+	}
   }
 
   for(auto c: coins) {
     c->GoNorth();
+	if(player->CollidesWith(c)){
+		c->HandleCollision();
+		score += 100;
+		std::cout<<"Winner Winner Chicken Dinner!!! Score: "<<score<<std::endl;
+		is_running = false;
+	}
+	for(auto p : projectiles){
+		if(p->CollidesWith(c)){
+			p->HandleCollision();
+			c->HandleCollision();
+			score += 100;
+			std::cout<<"Winner Winner Chicken Dinner!!! Score: "<<score<<std::endl;	
+			is_running = false;
+		}
+	}
   }
 
-  // Update enemy positions
+
+   // alien / player collision
   for(auto a : aliens) {
-    // do something here
+    if(player->CollidesWith(a)){
+		player->SetNotAlive();
+		std::cout<<"GAME OVER - You Lose!! Score: "<<score<<std::endl;	
+		is_running = false;
+	}
   }
 
   // Detect collisions
@@ -101,6 +129,8 @@ void SFApp::OnUpdateWorld() {
       if(p->CollidesWith(a)) {
         p->HandleCollision();
         a->HandleCollision();
+		score += 50;
+		std::cout<<"Score: "<<score<<std::endl;
       }
     }
   }
@@ -133,6 +163,27 @@ void SFApp::OnUpdateWorld() {
   }
   aliens.clear();
   aliens = list<shared_ptr<SFAsset>>(tmp);
+
+  //remove dead projectiles
+	list<shared_ptr<SFAsset>> tmp1;
+	for(auto p: projectiles){
+		if(p->IsAlive()){
+			tmp1.push_back(p);
+		}
+	}
+	projectiles.clear();
+	projectiles = list<shared_ptr<SFAsset>>(tmp1);
+
+	//remove dead coin
+	list<shared_ptr<SFAsset>> tmp2;
+	for(auto c: coins){
+		if(c->IsAlive()){
+			tmp2.push_back(c);
+		}
+	}
+	coins.clear();
+	coins= list<shared_ptr<SFAsset>>(tmp2);
+
 }
 
 void SFApp::OnRender() {
